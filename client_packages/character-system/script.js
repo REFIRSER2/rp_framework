@@ -105,14 +105,19 @@ createCharBtn.addEventListener('click', () => {
     const age = parseInt(charAgeInput.value);
     const description = charDescriptionInput.value;
 
-	//mp.gui.chat.push('Create Click', firstName, lastName, age);
+    // Debug logging
+    mp.gui.chat.push(`Creating character - Name: ${firstName} ${lastName}, Age: ${age}, Gender: ${selectedGender}, Model: ${playermodel}`);
+    console.log('Character Creation Data:', {firstName, lastName, age, description, selectedGender, playermodel});
+    
     if (!firstName || !lastName || !age) {
+        mp.gui.chat.push('Error: Please fill all character details.');
         console.log('Please fill all character details.');
         return;
     }
 	
 	
     if (!playermodel) {
+        mp.gui.chat.push('Error: No model selected.');
         console.log('No model selected.');
         return;
     }
@@ -127,11 +132,11 @@ characterList.addEventListener('click', (event) => {
 
     const charId = actionsDiv.dataset.charId;
     if (target.classList.contains('select-btn')) {
-        mp.trigger('server:character:select', parseInt(charId));
+        mp.events.callRemote('server:character:select', parseInt(charId));
     }
     if (target.classList.contains('delete-btn')) {
         if (confirm('Are you sure?')) {
-            mp.trigger('server:character:delete', parseInt(charId));
+            mp.events.callRemote('server:character:delete', parseInt(charId));
         }
     }
 });

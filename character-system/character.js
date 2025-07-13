@@ -31,13 +31,30 @@ mp.events.add('server:showCharacterUI', async (player) => {
 // Updated to handle detailed character creation including description
 mp.events.add('server:character:create', async (player, firstName, lastName, age, description, gender, model) => {
     try {
+        console.log('=== CHARACTER CREATION DEBUG ===');
+        console.log('Player:', player);
+        console.log('First Name:', firstName, 'Type:', typeof firstName);
+        console.log('Last Name:', lastName, 'Type:', typeof lastName);
+        console.log('Age:', age, 'Type:', typeof age);
+        console.log('Description:', description, 'Type:', typeof description);
+        console.log('Gender:', gender, 'Type:', typeof gender);
+        console.log('Model:', model, 'Type:', typeof model);
+        console.log('================================');
+        
         const playerId = player.getVariable('dbId');
         if (!playerId) {
 			console.log('Error: Player not authenticated.');
             return player.outputChatBox('Error: Player not authenticated.');
         }
 		
-		console.log('TEST CHARACTER CREATE');
+		console.log('TEST CHARACTER CREATE - Player ID:', playerId);
+        
+        // Validate parameters
+        if (!firstName || !lastName || age === null || age === undefined || gender === null || gender === undefined || !model) {
+            console.log('Missing required parameters!');
+            player.outputChatBox('Error: Missing required character information.');
+            return;
+        }
 
         // Call database with all character details
         await database.createCharacter(playerId, firstName, lastName, age, description, gender, model);

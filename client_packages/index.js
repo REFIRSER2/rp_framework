@@ -103,3 +103,7 @@ mp.events.add('client:hideCharacterUI', () => {
     mp.game.ui.displayRadar(true);
     mp.game.ui.displayHud(true);
 });
+
+mp.events.add('client:previewCharacterModel', (modelName) => {
+    mp.events.callRemote('client:previewCharacterModel', modelName);
+});
