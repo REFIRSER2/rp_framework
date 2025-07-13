@@ -1,0 +1,39 @@
+{
+  "mysql": {
+    "host": "localhost",
+    "user": "refirser",
+    "password": "OUIKA8-na)/5i(IG",
+    "database": "rp_framework"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "mailer": {
+    "service": "gmail",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "choh3512@gmail.com",
+      "pass": "ixqv aikb eeqv uhgd"
+    },
+    "from": "support@rworld.com"
+  },
+  "server": {
+    "dataSaveInterval": 300000
+  },
+  "spawn": {
+    "spawnpoint": {
+      "x": -425.517,
+      "y": 1123.620,
+      "z": 325.8544,
+      "heading": 90
+    },
+    "hidePosition": {
+      "x": 0,
+      "y": 0,
+      "z": -1000
+    }
+  }
+}

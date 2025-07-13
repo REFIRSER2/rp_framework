@@ -1,0 +1,26 @@
+{
+  "name": "rp-framework",
+  "version": "1.0.0",
+  "description": "RP Framework for RageMP",
+  "main": "index.js",
+  "ragemp": {
+    "client-files": [
+      "client_packages/index.js",
+      "client_packages/account-system/index.html",
+      "client_packages/account-system/style.css",
+      "client_packages/account-system/script.js",
+      "client_packages/character-system/index.html",
+      "client_packages/character-system/style.css",
+      "client_packages/character-system/script.js"
+    ]
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mysql2": "^2.3.3",
+    "ioredis": "^5.3.2",
+    "nodemailer": "^6.9.1",
+    "bcrypt": "^5.1.0"
+  }
+}
