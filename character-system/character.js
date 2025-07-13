@@ -1,6 +1,11 @@
 const database = require('../database');
 const modelsData = require('../models.json'); // Keep the original gender-segregated object
 
+// Debug log to check if models loaded correctly
+console.log('=== MODELS DATA LOADED ===');
+console.log('ModelsData:', JSON.stringify(modelsData));
+console.log('=========================');
+
 // This event is called from the account system after a successful login
 mp.events.add('server:playerLoggedIn', (player, playerData) => {
     // Store the database ID in the player object for this session
@@ -19,7 +24,8 @@ mp.events.add('server:showCharacterUI', async (player) => {
             return player.outputChatBox('Error: Player not authenticated.');
         }
         const characters = await database.getCharactersByPlayerId(playerId);
-		console.log(`characters ${characters}`);
+		console.log(`characters ${JSON.stringify(characters)}`);
+		console.log(`modelsData being sent: ${JSON.stringify(modelsData)}`);
         // Send the original modelsData object to the client
         player.call('client:showCharacterSelection', [characters, modelsData]);
     } catch (error) {

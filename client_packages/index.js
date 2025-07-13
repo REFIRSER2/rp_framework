@@ -77,15 +77,29 @@ mp.events.add('client:playerVerify', (email, code) => {
 });
 
 mp.events.add('client:showCharacterSelection', (characters, modelsData) => {
+    // Debug logging
+    mp.gui.chat.push(`[DEBUG] Characters received: ${characters ? characters.length : 'null'}`);
+    mp.gui.chat.push(`[DEBUG] ModelsData received: ${modelsData ? JSON.stringify(modelsData) : 'null'}`);
+    
     if (!characterBrowser) {
         characterBrowser = mp.browsers.new('package://character-system/index.html');
     }
     
-    const charactersJson = JSON.stringify(characters);
-    const modelsDataJson = JSON.stringify(modelsData);
-
+    // Ensure data is properly formatted
+    const charactersData = characters || [];
+    const models = modelsData || {"0": [], "1": []};
+    
     setTimeout(() => {
-        characterBrowser.execute(`mp.events.call('client:showCharacterUI', ${charactersJson}, ${modelsDataJson})`);
+        // Use a more reliable method to pass data to the browser
+        characterBrowser.execute(`
+            try {
+                const characters = ${JSON.stringify(charactersData)};
+                const models = ${JSON.stringify(models)};
+                mp.events.call('client:showCharacterUI', characters, models);
+            } catch(e) {
+                console.error('Error passing data to character UI:', e);
+            }
+        `);
         mp.gui.cursor.show(true, true);
         mp.gui.chat.activate(false);
         mp.game.ui.displayRadar(false);
