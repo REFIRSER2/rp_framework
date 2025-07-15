@@ -101,10 +101,10 @@ async function createNewPlayer(email, password) {
     return newPlayerData;
 }
 
-async function createCharacter(playerId, firstName, lastName, description, age, gender, model) {
+async function createCharacter(playerId, firstName, lastName, age, description, gender, model) {
     const [result] = await pool.query(
-        'INSERT INTO characters (player_id, first_name, last_name, description, age, gender, model) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [playerId, firstName, lastName, description, age, gender, model]
+        'INSERT INTO characters (player_id, first_name, last_name, age, description, gender, model) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [playerId, firstName, lastName, age, description, gender, model]
     );
     return result.insertId;
 }

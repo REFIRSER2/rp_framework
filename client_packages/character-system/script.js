@@ -73,28 +73,37 @@ function setGender(gender) {
 
 // --- Model Selection ---
 prevModelBtn.addEventListener('click', () => {
-    const currentGenderModels = models[selectedGender] || [];
+    const currentGenderModels = models[String(selectedGender)] || [];
     if (currentGenderModels.length === 0) return;
     currentModelIndex = (currentModelIndex - 1 + currentGenderModels.length) % currentGenderModels.length;
     updateModelPreview();
 });
 
 nextModelBtn.addEventListener('click', () => {
-    const currentGenderModels = models[selectedGender] || [];
+    const currentGenderModels = models[String(selectedGender)] || [];
     if (currentGenderModels.length === 0) return;
     currentModelIndex = (currentModelIndex + 1) % currentGenderModels.length;
     updateModelPreview();
 });
 
 function updateModelPreview() {
-    const currentGenderModels = models[selectedGender] || [];
+    console.log('=== UPDATE MODEL PREVIEW ===');
+    console.log('Selected Gender:', selectedGender);
+    console.log('Current Models:', models);
+    console.log('Current Model Index:', currentModelIndex);
+    
+    const currentGenderModels = models[String(selectedGender)] || [];
+    console.log('Current Gender Models:', currentGenderModels);
+    
     if (currentGenderModels.length > 0) {
         playermodel = currentGenderModels[currentModelIndex];
         modelNameDisplay.textContent = playermodel;
+        console.log('Selected Model:', playermodel);
         mp.trigger('client:previewCharacterModel', playermodel);
     } else {
         playermodel = '';
         modelNameDisplay.textContent = 'No Models';
+        console.log('No models available for gender:', selectedGender);
     }
 }
 
@@ -105,14 +114,19 @@ createCharBtn.addEventListener('click', () => {
     const age = parseInt(charAgeInput.value);
     const description = charDescriptionInput.value;
 
-	//mp.gui.chat.push('Create Click', firstName, lastName, age);
+    // Debug logging
+    mp.gui.chat.push(`Creating character - Name: ${firstName} ${lastName}, Age: ${age}, Gender: ${selectedGender}, Model: ${playermodel}`);
+    console.log('Character Creation Data:', {firstName, lastName, age, description, selectedGender, playermodel});
+    
     if (!firstName || !lastName || !age) {
+        mp.gui.chat.push('Error: Please fill all character details.');
         console.log('Please fill all character details.');
         return;
     }
 	
 	
     if (!playermodel) {
+        mp.gui.chat.push('Error: No model selected.');
         console.log('No model selected.');
         return;
     }
@@ -127,21 +141,41 @@ characterList.addEventListener('click', (event) => {
 
     const charId = actionsDiv.dataset.charId;
     if (target.classList.contains('select-btn')) {
-        mp.trigger('server:character:select', parseInt(charId));
+        mp.events.callRemote('server:character:select', parseInt(charId));
     }
     if (target.classList.contains('delete-btn')) {
         if (confirm('Are you sure?')) {
-            mp.trigger('server:character:delete', parseInt(charId));
+            mp.events.callRemote('server:character:delete', parseInt(charId));
         }
     }
 });
 
 mp.events.add('client:showCharacterUI', (characters, receivedModels) => {
+    // Enhanced debug logging
+    console.log('=== CHARACTER UI DEBUG ===');
+    console.log('Characters:', characters);
+    console.log('Received Models:', receivedModels);
+    console.log('Type of receivedModels:', typeof receivedModels);
+    
+    // Also log to game chat for easier debugging
+    mp.gui.chat.push(`[DEBUG] Character UI opened`);
+    mp.gui.chat.push(`[DEBUG] Characters count: ${characters ? characters.length : 'null'}`);
+    mp.gui.chat.push(`[DEBUG] Models type: ${typeof receivedModels}`);
+    
     // Assign the received models to the global models variable
-	mp.gui.chat.push(`TEST TEST ${characters} ${receivedModels}`)
-    if (receivedModels) {
+    if (receivedModels && typeof receivedModels === 'object') {
         models = receivedModels;
+        console.log('Models assigned successfully:', models);
+        mp.gui.chat.push(`[DEBUG] Models assigned: Male=${models["0"]?.length || 0}, Female=${models["1"]?.length || 0}`);
+    } else {
+        console.error('Invalid models data received!');
+        mp.gui.chat.push(`[ERROR] Invalid models data!`);
+        models = {"0": [], "1": []};  // Fallback to empty models
     }
+    
+    // Debug: Check if models have content
+    console.log('Male models count:', models["0"] ? models["0"].length : 0);
+    console.log('Female models count:', models["1"] ? models["1"].length : 0);
 
     characterList.innerHTML = '';
     if (characters && characters.length > 0) {
