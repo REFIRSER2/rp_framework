@@ -87,10 +87,56 @@ fivem-rp-framework/
 - `rp-framework:showLoginUI` - 로그인 UI 표시
 - `rp-framework:showCharacterUI` - 캐릭터 UI 표시
 
+## 이메일 설정
+
+### 방법 1: SendGrid 사용 (권장)
+1. [SendGrid](https://sendgrid.com)에서 무료 계정 생성
+2. API 키 생성
+3. `config.json` 수정:
+```json
+{
+  "email": {
+    "service": "sendgrid",
+    "sendgrid_api_key": "YOUR_SENDGRID_API_KEY",
+    "from_email": "noreply@yourdomain.com"
+  }
+}
+```
+
+### 방법 2: Node.js 백엔드 사용
+1. `email-backend` 폴더의 Node.js 서버 설정
+2. `.env` 파일에 Gmail 또는 SMTP 설정
+3. 백엔드 서버 실행: `npm start`
+4. `config.json` 수정:
+```json
+{
+  "email": {
+    "service": "backend",
+    "api_key": "your-api-key",
+    "backend_url": "http://localhost:3001"
+  }
+}
+```
+
+### 방법 3: Mailgun 사용
+1. [Mailgun](https://www.mailgun.com)에서 계정 생성
+2. 도메인 설정 및 API 키 획득
+3. `config.json` 수정:
+```json
+{
+  "email": {
+    "service": "mailgun",
+    "mailgun_domain": "your-domain.mailgun.org",
+    "mailgun_api_key": "YOUR_MAILGUN_API_KEY"
+  }
+}
+```
+
 ## 주의사항
 
-- 이메일 인증 기능은 현재 콘솔에만 출력됩니다. 실제 이메일 전송을 위해서는 별도의 이메일 서비스 설정이 필요합니다.
+- 이메일 서비스 설정이 필요합니다. 위의 이메일 설정 방법 중 하나를 선택하세요.
 - 비밀번호는 기본적인 해싱만 적용되어 있으므로, 프로덕션 환경에서는 더 강력한 암호화를 권장합니다.
+- Node.js 백엔드를 사용하는 경우, 방화벽에서 포트 3001을 열어야 합니다.
 
 ## 라이선스
 

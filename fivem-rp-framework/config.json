@@ -9,16 +9,17 @@
     "host": "localhost",
     "port": 6379
   },
-  "mailer": {
-    "service": "gmail",
-    "host": "smtp.gmail.com",
-    "port": 587,
-    "secure": false,
-    "auth": {
-      "user": "choh3512@gmail.com",
-      "pass": "ixqv aikb eeqv uhgd"
-    },
-    "from": "support@rworld.com"
+  "email": {
+    "service": "backend",
+    "server_name": "RP World",
+    "from_email": "noreply@rworld.com",
+    "from_name": "RP World Support",
+    "api_key": "your-super-secret-api-key-here",
+    "backend_url": "http://localhost:3001",
+    "webhook_url": "http://localhost:3001/send-verification",
+    "sendgrid_api_key": "YOUR_SENDGRID_API_KEY_HERE",
+    "mailgun_domain": "your-domain.mailgun.org",
+    "mailgun_api_key": "YOUR_MAILGUN_API_KEY_HERE"
   },
   "server": {
     "dataSaveInterval": 300000

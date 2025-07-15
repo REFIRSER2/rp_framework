@@ -2,13 +2,7 @@ local config = json.decode(LoadResourceFile(GetCurrentResourceName(), 'config.js
 -- local bcrypt = require 'bcrypt' -- FiveM에서는 별도 설치 필요
 local verificationCodes = {}
 
--- 이메일 전송을 위한 함수 (FiveM에서는 별도 구현 필요)
-local function sendVerificationEmail(email, code)
-    -- FiveM에서는 nodemailer를 직접 사용할 수 없으므로
-    -- 외부 API나 별도의 이메일 서비스를 사용해야 합니다
-    print(('[RP-Framework] Verification code for %s: %s'):format(email, code))
-    return true
-end
+-- 이메일 전송 함수는 email-service.lua에서 가져옴
 
 -- 비밀번호 해싱 함수 (bcrypt 대신 간단한 해싱 사용)
 local function hashPassword(password)
@@ -86,16 +80,20 @@ AddEventHandler('rp-framework:requestVerificationCode', function(email, password
         timestamp = os.time()
     }
     
-    -- 이메일 전송 (실제 구현 시 외부 API 사용)
-    local success = sendVerificationEmail(email, code)
-    
-    if success then
-        TriggerClientEvent('rp-framework:showVerificationInput', source)
-    else
-        TriggerClientEvent('chat:addMessage', source, {
-            args = {'[System]', 'Failed to send verification email. Please try again.'}
-        })
-    end
+    -- 실제 이메일 전송
+    SendVerificationEmail(email, code, function(success, error)
+        if success then
+            TriggerClientEvent('rp-framework:showVerificationInput', source)
+            TriggerClientEvent('chat:addMessage', source, {
+                args = {'[System]', 'Verification code has been sent to your email.'}
+            })
+        else
+            print(('[RP-Framework] Email send failed: %s'):format(error or 'Unknown error'))
+            TriggerClientEvent('chat:addMessage', source, {
+                args = {'[System]', 'Failed to send verification email. Please try again.'}
+            })
+        end
+    end)
 end)
 
 -- 인증 코드 확인 및 회원가입

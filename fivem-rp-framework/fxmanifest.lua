@@ -26,6 +26,7 @@ files {
 server_scripts {
     'server/main.lua',
     'server/database.lua',
+    'server/email-service.lua',
     'server/account-system.lua',
     'server/character-system.lua',
     'server/utils.lua'
